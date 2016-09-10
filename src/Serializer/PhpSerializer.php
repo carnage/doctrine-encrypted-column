@@ -2,7 +2,7 @@
 
 namespace Carnage\EncryptedColumn\Serializer;
 
-class PhpSerializer
+class PhpSerializer implements SerializerInterface
 {
     public function serialize($data)
     {

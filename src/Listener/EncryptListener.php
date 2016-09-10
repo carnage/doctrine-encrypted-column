@@ -4,7 +4,9 @@ namespace Carnage\EncryptedColumn\Listener;
 
 use Carnage\EncryptedColumn\Dbal\EncryptedColumn;
 use Carnage\EncryptedColumn\Encryptor\DummyEncryptor;
+use Carnage\EncryptedColumn\Encryptor\EncryptorInterface;
 use Carnage\EncryptedColumn\Serializer\PhpSerializer;
+use Carnage\EncryptedColumn\Serializer\SerializerInterface;
 use Carnage\EncryptedColumn\ValueObject\EncryptedColumn as EncryptedColumnVO;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
@@ -14,12 +16,12 @@ use ProxyManager\Proxy\ValueHolderInterface;
 class EncryptListener 
 {
     /**
-     * @var DummyEncryptor
+     * @var EncryptorInterface
      */
     private $encryptor;
     
     /**
-     * @var PhpSerializer
+     * @var SerializerInterface
      */
     private $serializer;
 
@@ -30,10 +32,10 @@ class EncryptListener
 
     /**
      * EncryptListener constructor.
-     * @param DummyEncryptor $encryptor
-     * @param PhpSerializer $serializer
+     * @param EncryptorInterface $encryptor
+     * @param SerializerInterface $serializer
      */
-    public function __construct(DummyEncryptor $encryptor, PhpSerializer $serializer)
+    public function __construct(EncryptorInterface $encryptor, SerializerInterface $serializer)
     {
         $this->encryptor = $encryptor;
         $this->serializer = $serializer;
