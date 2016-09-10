@@ -11,6 +11,6 @@ class DummyEncryptor
 
     public function decrypt($data)
     {
-        return substr($data, 19);
+        return substr($data, 20);
     }
 }

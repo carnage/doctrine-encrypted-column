@@ -4,6 +4,7 @@ namespace Carnage\EncryptedColumn\Dbal;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\Type;
+use Carnage\EncryptedColumn\ValueObject\EncryptedColumn as EncryptedColumnVO;
 
 /**
  * Object type for storing an encrypted column object as json in the db

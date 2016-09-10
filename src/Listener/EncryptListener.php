@@ -78,6 +78,7 @@ class EncryptListener
 
     private function replaceWithProxy(\ReflectionProperty $field, $entity)
     {
+        $field->setAccessible(true);
         /** @var EncryptedColumnVO $value */
         $value = $field->getValue($entity);
 
@@ -100,13 +101,14 @@ class EncryptListener
 
     private function encryptField(\ReflectionProperty $field, $entity)
     {
+        $field->setAccessible(true);
         $value = $field->getValue($entity);
 
         if ($value instanceof LazyLoadingInterface) {
             /** @var LazyLoadingInterface|ValueHolderInterface $value */
             if (!$value->isProxyInitialized()) {
                 //if data hasn't been encrypted, we don't need to change it; set it back to what it was at load
-                $field->setValue($this->originalValues[spl_object_hash($entity)][$field->getName()]);
+                $field->setValue($entity, $this->originalValues[spl_object_hash($entity)][$field->getName()]);
                 return;
             }
 
@@ -121,6 +123,6 @@ class EncryptListener
 
         $data = $this->encryptor->encrypt($this->serializer->serialize($value));
 
-        $field->setValue(new EncryptedColumnVO(get_class($value), $data));
+        $field->setValue($entity, new EncryptedColumnVO(get_class($value), $data));
     }
 }

@@ -25,7 +25,7 @@ class EncryptedColumn implements \JsonSerializable
 
     function jsonSerialize()
     {
-        return (array) $this;
+        return ['classname' => $this->classname, 'data' => $this->data];
     }
 
     /**
