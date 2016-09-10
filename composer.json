@@ -1,0 +1,20 @@
+{
+  "name": "carnage/doctrine-encrypted-column",
+  "description": "Provides a secure way of transparently encrypting data in doctrine ORM",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Chris Riley"
+    }
+  ],
+  "require": {
+    "doctrine/orm": "^2.5",
+    "ocramius/proxy-manager": "^1.0.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Carnage\\EncryptedColumn\\": "src/"
+    }
+  }
+}
