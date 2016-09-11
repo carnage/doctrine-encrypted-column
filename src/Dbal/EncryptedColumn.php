@@ -1,6 +1,7 @@
 <?php
 namespace Carnage\EncryptedColumn\Dbal;
 
+use Carnage\EncryptedColumn\Service\EncryptionService;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\Type;
@@ -14,6 +15,19 @@ use Carnage\EncryptedColumn\ValueObject\EncryptedColumn as EncryptedColumnVO;
 class EncryptedColumn extends Type
 {
     const ENCRYPTED = 'encrypted';
+
+    /**
+     * @var EncryptionService
+     */
+    private $encryptionService;
+
+    public static function create(EncryptionService $encryptionService)
+    {
+        Type::addType(EncryptedColumn::ENCRYPTED, EncryptedColumn::class);
+        /** @var EncryptedColumn $instance */
+        $instance = Type::getType(EncryptedColumn::ENCRYPTED);
+        $instance->encryptionService = $encryptionService;
+    }
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
@@ -38,12 +52,16 @@ class EncryptedColumn extends Type
 
         $decoded = $this->decodeJson($value);
 
-        return EncryptedColumnVO::fromArray($decoded);
+        return $this->encryptionService->decryptField(EncryptedColumnVO::fromArray($decoded));
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return json_encode($value);
+        if ($value === null) {
+            return null;
+        }
+
+        return json_encode($this->encryptionService->encryptField($value));
     }
 
     /**
