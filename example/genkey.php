@@ -1,4 +1,6 @@
 <?php
+require "vendor/autoload.php";
+
 use ParagonIE\Halite\KeyFactory;
 
 $encKey = KeyFactory::generateEncryptionKey();
