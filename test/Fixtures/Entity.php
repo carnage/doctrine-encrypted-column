@@ -1,6 +1,6 @@
 <?php
 
-namespace Carnage\EncryptedColumn\TestFixtures;
+namespace Carnage\EncryptedColumn\Tests\Fixtures;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,6 +15,12 @@ class Entity
      * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer")
      */
     protected $id;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $unrelated = 'test';
 
     /**
      * @var CreditCardDetails
@@ -52,5 +58,21 @@ class Entity
     public function setCreditCardDetails($creditCardDetails)
     {
         $this->creditCardDetails = $creditCardDetails;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnrelated()
+    {
+        return $this->unrelated;
+    }
+
+    /**
+     * @param string $unrelated
+     */
+    public function setUnrelated($unrelated)
+    {
+        $this->unrelated = $unrelated;
     }
 }

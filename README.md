@@ -1,5 +1,3 @@
-**Work in progress**
-
 # Motivation
 
 Currently there are about a dozen encrypted column extensions for doctrine. None of them are very well implemented and are
@@ -8,6 +6,20 @@ useless unless you use that framework.
 
 This lib intends to resolve these two issues and provide an obvious choice library for anyone needing to encrypt data they
 are storing through doctrine ORM.
+
+Every endeavour will be taken to ensure that future versions of this library will be able to read data encrypted with
+older versions and re-encrypt to take advantage of any security fixes or improvements. In the event that this isn't
+possible automatically, guidance will be provided to allow you to migrate your data manually, to ensure that this process
+is as smooth as possible, we suggest making a note of the versions of lib sodium, halite and this library that you initially
+install.
+
+# Features
+
+- Encrypted column type for doctrine
+- Functionally similar to object column type
+- Transparent to end user
+- Uses proxies to avoid decrypting data that isn't needed
+- Best in class cryptography (LibSodium)
 
 # Pull requests
 
@@ -26,5 +38,4 @@ I will not accept:
 
 # Security issues
 
-Once this lib is tagged, I will provide an email + GPG keys for submitting security issues to, until then please raise
-github issues.
+You can use my keys from keybase https://keybase.io/carnage to contact me regarding any security issues. 

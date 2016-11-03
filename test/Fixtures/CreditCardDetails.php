@@ -1,6 +1,6 @@
 <?php
 
-namespace Carnage\EncryptedColumn\TestFixtures;
+namespace Carnage\EncryptedColumn\Tests\Fixtures;
 
 class CreditCardDetails
 {
