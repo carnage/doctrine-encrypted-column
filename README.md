@@ -38,4 +38,4 @@ I will not accept:
 
 # Security issues
 
-You can use my keys from keybase https://keybase.io/carnage to contact me regarding any security issues. 
+You can use my keys from keybase https://keybase.io/carnage to contact me regarding any security issues.

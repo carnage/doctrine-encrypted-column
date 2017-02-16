@@ -2,20 +2,32 @@
 
 namespace Carnage\EncryptedColumn\ValueObject;
 
+use Carnage\EncryptedColumn\Encryptor\HaliteEncryptor;
+use Carnage\EncryptedColumn\Serializer\PhpSerializer;
+
 class EncryptedColumn implements \JsonSerializable
 {
     private $classname;
     private $data;
+    private $encryptor;
+    private $serializer;
+    private $keypath;
 
     /**
      * EncryptedColumn constructor.
      * @param $classname
      * @param $data
      */
-    public function __construct($classname, $data)
-    {
+    public function __construct(
+        $classname,
+        $data,
+        $encryptor = HaliteEncryptor::IDENTITY,
+        $serializer = PhpSerializer::IDENTITY
+    ) {
         $this->classname = $classname;
         $this->data = $data;
+        $this->encryptor = $encryptor;
+        $this->serializer = $serializer;
     }
 
     public static function fromArray(array $data)
@@ -25,7 +37,12 @@ class EncryptedColumn implements \JsonSerializable
 
     function jsonSerialize()
     {
-        return ['classname' => $this->classname, 'data' => $this->data];
+        return [
+            'classname' => $this->classname,
+            'data' => $this->data,
+            'encryptor' => $this->encryptor,
+            'serializer' => $this->serializer
+        ];
     }
 
     /**
@@ -42,5 +59,21 @@ class EncryptedColumn implements \JsonSerializable
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEncryptor(): string
+    {
+        return $this->encryptor;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSerializer(): string
+    {
+        return $this->serializer;
     }
 }

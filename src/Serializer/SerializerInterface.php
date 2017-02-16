@@ -12,4 +12,6 @@ interface SerializerInterface
     public function serialize($data);
 
     public function unserialize($data);
+
+    public function getIdentity();
 }

@@ -7,6 +7,7 @@ use ParagonIE\Halite\Symmetric;
 
 class HaliteEncryptor implements EncryptorInterface
 {
+    const IDENTITY = 'halite:0.1';
     /**
      * @var string
      */
@@ -26,6 +27,11 @@ class HaliteEncryptor implements EncryptorInterface
     public function decrypt($data)
     {
         return Symmetric\Crypto::decrypt($data, $this->loadKey());
+    }
+
+    public function getIdentity()
+    {
+        return self::IDENTITY;
     }
 
     /**

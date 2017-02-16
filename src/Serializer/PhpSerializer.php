@@ -4,6 +4,8 @@ namespace Carnage\EncryptedColumn\Serializer;
 
 class PhpSerializer implements SerializerInterface
 {
+    const IDENTITY = 'php:0.1';
+
     public function serialize($data)
     {
         return serialize($data);
@@ -12,5 +14,10 @@ class PhpSerializer implements SerializerInterface
     public function unserialize($data)
     {
         return unserialize($data);
+    }
+
+    public function getIdentity()
+    {
+        return self::IDENTITY;
     }
 }
