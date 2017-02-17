@@ -8,7 +8,7 @@ use ParagonIE\Halite\Symmetric;
 
 class HaliteEncryptor implements EncryptorInterface
 {
-    const IDENTITY = 'halite:0.1:' . Halite::VERSION;
+    const IDENTITY = 'halite';
     /**
      * @var string
      */

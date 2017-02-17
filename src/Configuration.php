@@ -24,15 +24,36 @@ class Configuration
      */
     private static function buildEncryptionService($keypath): EncryptionService
     {
-        $encryptor = new HaliteEncryptor($keypath);
-        $serializer = new PhpSerializer();
+        $encryptors = self::buildEncryptorsContainer($keypath);
+        $encryptor = $encryptors->get(HaliteEncryptor::IDENTITY);
 
-        $encryptors = new VersionedContainer();
-        $encryptors->set($encryptor);
-
-        $serializers = new VersionedContainer();
-        $serializers->set($serializer);
+        $serializers = self::buildSerilaizerContainer();
+        $serializer = $serializers->get(PhpSerializer::IDENTITY);
 
         return new EncryptionService($encryptor, $serializer, $encryptors, $serializers);
+    }
+
+    /**
+     * @param $encryptor
+     * @return VersionedContainer
+     */
+    private static function buildEncryptorsContainer($keypath): VersionedContainer
+    {
+        $encryptor = new HaliteEncryptor($keypath);
+        $encryptors = new VersionedContainer();
+        $encryptors->set($encryptor);
+        return $encryptors;
+    }
+
+    /**
+     * @param $serializer
+     * @return VersionedContainer
+     */
+    private static function buildSerilaizerContainer(): VersionedContainer
+    {
+        $serializer = new PhpSerializer();
+        $serializers = new VersionedContainer();
+        $serializers->set($serializer);
+        return $serializers;
     }
 }

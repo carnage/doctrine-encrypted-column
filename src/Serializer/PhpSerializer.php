@@ -4,7 +4,7 @@ namespace Carnage\EncryptedColumn\Serializer;
 
 class PhpSerializer implements SerializerInterface
 {
-    const IDENTITY = 'php:0.1';
+    const IDENTITY = 'php';
 
     public function serialize($data)
     {
