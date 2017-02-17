@@ -16,7 +16,7 @@ class PhpSerializer implements SerializerInterface
         return unserialize($data);
     }
 
-    public function getIdentity()
+    public function getIdentifier(): string
     {
         return self::IDENTITY;
     }

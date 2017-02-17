@@ -2,12 +2,13 @@
 
 namespace Carnage\EncryptedColumn\Encryptor;
 
+use ParagonIE\Halite\Halite;
 use ParagonIE\Halite\KeyFactory;
 use ParagonIE\Halite\Symmetric;
 
 class HaliteEncryptor implements EncryptorInterface
 {
-    const IDENTITY = 'halite:0.1';
+    const IDENTITY = 'halite:0.1:' . Halite::VERSION;
     /**
      * @var string
      */
@@ -29,7 +30,7 @@ class HaliteEncryptor implements EncryptorInterface
         return Symmetric\Crypto::decrypt($data, $this->loadKey());
     }
 
-    public function getIdentity()
+    public function getIdentifier(): string
     {
         return self::IDENTITY;
     }

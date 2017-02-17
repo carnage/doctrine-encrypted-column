@@ -38,7 +38,7 @@ class EncryptedColumn implements \JsonSerializable
         return new self($data['classname'], $data['data'], $data['encryptor'], $data['serializer']);
     }
 
-    function jsonSerialize()
+    public function jsonSerialize()
     {
         return [
             'classname' => $this->classname,
@@ -78,5 +78,10 @@ class EncryptedColumn implements \JsonSerializable
     public function getSerializer(): string
     {
         return $this->serializer;
+    }
+
+    public function needsReencryption($encryptor, $serializer)
+    {
+        return $encryptor === $this->encryptor && $serializer === $this->serializer;
     }
 }
