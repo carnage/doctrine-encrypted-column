@@ -11,7 +11,6 @@ class EncryptedColumn implements \JsonSerializable
     private $data;
     private $encryptor;
     private $serializer;
-    private $keypath;
 
     /**
      * EncryptedColumn constructor.
@@ -32,7 +31,11 @@ class EncryptedColumn implements \JsonSerializable
 
     public static function fromArray(array $data)
     {
-        return new self($data['classname'], $data['data']);
+        if(!isset($data['serializer'])) {
+            return new self($data['classname'], $data['data']);
+        }
+
+        return new self($data['classname'], $data['data'], $data['encryptor'], $data['serializer']);
     }
 
     function jsonSerialize()

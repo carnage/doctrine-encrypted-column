@@ -57,6 +57,8 @@ class EncryptionService
         if ($value instanceof LazyLoadingInterface) {
             /** @var LazyLoadingInterface|ValueHolderInterface $value */
             if (!$value->isProxyInitialized()) {
+                //put a method on object to check if needs reencrypting check that here
+                // $value->needsReencryption()
                 //if data hasn't been encrypted, we don't need to change it; set it back to what it was at load
                 return $this->originalValues[spl_object_hash($value)];
             }
@@ -71,7 +73,12 @@ class EncryptionService
 
         $data = $this->encryptor->encrypt($this->serializer->serialize($value));
 
-        return new EncryptedColumnVO(get_class($value), $data);
+        return new EncryptedColumnVO(
+            get_class($value),
+            $data,
+            $this->encryptor->getIdentity(),
+            $this->serializer->getIdentity()
+        );
     }
 
     /**
