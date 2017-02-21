@@ -2,7 +2,9 @@
 
 namespace Carnage\EncryptedColumn\Container;
 
+use Carnage\EncryptedColumn\ValueObject\IdentityInterface;
+
 interface VersionedInterface
 {
-    public function getIdentifier(): string;
+    public function getIdentifier(): IdentityInterface;
 }

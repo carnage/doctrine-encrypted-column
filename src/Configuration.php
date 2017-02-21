@@ -11,49 +11,35 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class Configuration
 {
-    public static function register(EntityManagerInterface $em, $keypath)
+    public static function register(EntityManagerInterface $em, string $keypath)
     {
         EncryptedColumn::create(self::buildEncryptionService($keypath));
         $conn = $em->getConnection();
-        $conn->getDatabasePlatform()->registerDoctrineTypeMapping(EncryptedColumn::ENCRYPTED, EncryptedColumn::ENCRYPTED);
+        $conn->getDatabasePlatform()->registerDoctrineTypeMapping(
+            EncryptedColumn::ENCRYPTED,
+            EncryptedColumn::ENCRYPTED
+        );
     }
 
-    /**
-     * @param $keypath
-     * @return EncryptionService
-     */
-    private static function buildEncryptionService($keypath): EncryptionService
+    private static function buildEncryptionService(string $keypath): EncryptionService
     {
         $encryptors = self::buildEncryptorsContainer($keypath);
-        $encryptor = $encryptors->get(HaliteEncryptor::IDENTITY);
-
         $serializers = self::buildSerilaizerContainer();
-        $serializer = $serializers->get(PhpSerializer::IDENTITY);
-
-        return new EncryptionService($encryptor, $serializer, $encryptors, $serializers);
+        return new EncryptionService(
+            $encryptors->get(HaliteEncryptor::IDENTITY),
+            $serializers->get(PhpSerializer::IDENTITY),
+            $encryptors,
+            $serializers
+        );
     }
 
-    /**
-     * @param $encryptor
-     * @return VersionedContainer
-     */
-    private static function buildEncryptorsContainer($keypath): VersionedContainer
+    private static function buildEncryptorsContainer(string $keypath): VersionedContainer
     {
-        $encryptor = new HaliteEncryptor($keypath);
-        $encryptors = new VersionedContainer();
-        $encryptors->set($encryptor);
-        return $encryptors;
+        return new VersionedContainer(new HaliteEncryptor($keypath));
     }
 
-    /**
-     * @param $serializer
-     * @return VersionedContainer
-     */
     private static function buildSerilaizerContainer(): VersionedContainer
     {
-        $serializer = new PhpSerializer();
-        $serializers = new VersionedContainer();
-        $serializers->set($serializer);
-        return $serializers;
+        return new VersionedContainer(new PhpSerializer());
     }
 }

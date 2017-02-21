@@ -2,6 +2,9 @@
 
 namespace Carnage\EncryptedColumn\Serializer;
 
+use Carnage\EncryptedColumn\ValueObject\IdentityInterface;
+use Carnage\EncryptedColumn\ValueObject\SerializerIdentity;
+
 class PhpSerializer implements SerializerInterface
 {
     const IDENTITY = 'php';
@@ -16,8 +19,8 @@ class PhpSerializer implements SerializerInterface
         return unserialize($data);
     }
 
-    public function getIdentifier(): string
+    public function getIdentifier(): IdentityInterface
     {
-        return self::IDENTITY;
+        return new SerializerIdentity(self::IDENTITY);
     }
 }

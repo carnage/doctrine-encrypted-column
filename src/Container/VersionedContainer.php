@@ -4,31 +4,30 @@ namespace Carnage\EncryptedColumn\Container;
 
 use Psr\Container\ContainerInterface;
 
-class VersionedContainer implements ContainerInterface
+final class VersionedContainer implements ContainerInterface
 {
+    /**
+     * @var VersionedInterface[]
+     */
     private $services;
 
-    public function set(VersionedInterface $service)
+    public function __construct(VersionedInterface ...$services)
     {
-        $this->services[$service->getIdentifier()] = $service;
+        foreach ($services as $service) {
+            $this->services[$service->getIdentifier()->toString()] = $service;
+        }
     }
 
-    public function get($id)
+    public function get($id): VersionedInterface
     {
         if (!$this->has($id)) {
-            throw new NotFoundException(
-                sprintf(
-                    'Unable to find service %s, services available %s',
-                    $id,
-                    json_encode(array_keys($this->services), true)
-                )
-            );
+            throw NotFoundException::serviceNotFoundInContainer($id, $this->services);
         }
 
         return $this->services[$id];
     }
 
-    public function has($id)
+    public function has($id): bool
     {
         return isset($this->services[$id]);
     }

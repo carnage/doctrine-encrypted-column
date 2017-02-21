@@ -2,16 +2,12 @@
 
 namespace Carnage\EncryptedColumn\Service;
 
-use Carnage\EncryptedColumn\Dbal\EncryptedColumn;
-use Carnage\EncryptedColumn\Encryptor\DummyEncryptor;
 use Carnage\EncryptedColumn\Encryptor\EncryptorInterface;
-use Carnage\EncryptedColumn\Serializer\PhpSerializer;
 use Carnage\EncryptedColumn\Serializer\SerializerInterface;
 use Carnage\EncryptedColumn\ValueObject\EncryptedColumn as EncryptedColumnVO;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
-use ProxyManager\Proxy\ValueHolderInterface;
+use ProxyManager\Proxy\VirtualProxyInterface;
 use Psr\Container\ContainerInterface;
 
 class EncryptionService
@@ -74,7 +70,7 @@ class EncryptionService
     public function encryptField($value): EncryptedColumnVO
     {
         if ($value instanceof LazyLoadingInterface) {
-            /** @var LazyLoadingInterface|ValueHolderInterface $value */
+            /** @var VirtualProxyInterface $value */
             // If the value hasn't been decrypted; it hasn't been changed. Don't bother reencrypting unless it
             // was encrypted using a different configuration
             if (!$value->isProxyInitialized()) {
@@ -110,8 +106,8 @@ class EncryptionService
      */
     private function createInitializer(EncryptedColumnVO $value): \Closure
     {
-        $serializer = $this->serializers->get($value->getSerializer());
-        $encryptor = $this->encryptors->get($value->getEncryptor());
+        $serializer = $this->serializers->get($value->getSerializerIdentifier()->toString());
+        $encryptor = $this->encryptors->get($value->getEncryptorIdentifier()->toString());
 
         return function (& $wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, & $initializer) use ($serializer, $encryptor, $value) {
             $initializer = null;
