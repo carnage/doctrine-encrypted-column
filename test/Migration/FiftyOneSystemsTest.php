@@ -8,7 +8,7 @@
 
 namespace Carnage\EncryptedColumn\Tests;
 
-use Carnage\EncryptedColumn\Configuration;
+use Carnage\EncryptedColumn\Setup as ECSetup;
 use Carnage\EncryptedColumn\Tests\Migration\Fixtures\Migrated\Entity;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityManager;
 /**
  * Class FiftyOneSystemsTest
  * @package Carnage\EncryptedColumn\Tests
- * @runTestsInSeparateProcesses
+ * runTestsInSeparateProcesses
  */
 class FiftyOneSystemsTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,7 +45,10 @@ class FiftyOneSystemsTest extends \PHPUnit_Framework_TestCase
 
             self::$_em = EntityManager::create($conn, $config);
 
-            Configuration::register(self::$_em, __DIR__ . '/Fixtures/enc.key');
+            (new ECSetup())
+                ->withKeyPath(__DIR__ . '/Fixtures/enc.key')
+                ->enableLegacy(pack("H*", "dda8e5b978e05346f08b312a8c2eac03670bb5661097f8bc13212c31be66384c"))
+                ->register(self::$_em);
 
             $schemaTool = new SchemaTool(self::$_em);
 
@@ -65,4 +68,5 @@ class FiftyOneSystemsTest extends \PHPUnit_Framework_TestCase
         $entity = $this->em->find(Entity::class, 1);
         $this->assertEquals('secret code', $entity->getSecretData());
     }
+
 }
