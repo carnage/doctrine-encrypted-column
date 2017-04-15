@@ -1,13 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: imhotek
- * Date: 10/09/16
- * Time: 16:08
- */
+
 namespace Carnage\EncryptedColumn\Serializer;
 
-interface SerializerInterface
+use Carnage\EncryptedColumn\Container\VersionedInterface;
+
+interface SerializerInterface extends VersionedInterface
 {
     public function serialize($data);
 

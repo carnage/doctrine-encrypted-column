@@ -1,13 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: imhotek
- * Date: 10/09/16
- * Time: 16:08
- */
+
 namespace Carnage\EncryptedColumn\Encryptor;
 
-interface EncryptorInterface
+use Carnage\EncryptedColumn\Container\VersionedInterface;
+
+interface EncryptorInterface extends VersionedInterface
 {
     public function encrypt($data);
 
