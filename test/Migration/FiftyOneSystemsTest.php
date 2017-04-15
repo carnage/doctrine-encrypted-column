@@ -46,7 +46,7 @@ class FiftyOneSystemsTest extends \PHPUnit_Framework_TestCase
             self::$_em = EntityManager::create($conn, $config);
 
             (new ECSetup())
-                ->withKeyPath(__DIR__ . '/Fixtures/enc.key')
+                ->withKeyPath(__DIR__ . '/Fixtures/Migrated/enc.key')
                 ->enableLegacy(pack("H*", "dda8e5b978e05346f08b312a8c2eac03670bb5661097f8bc13212c31be66384c"))
                 ->register(self::$_em);
 
@@ -69,4 +69,16 @@ class FiftyOneSystemsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('secret code', $entity->getSecretData());
     }
 
+    public function testWrite()
+    {
+        /** @var Entity $entity */
+        $entity = $this->em->find(Entity::class, 1);
+        $entity->setSecretData('top secret code');
+
+        $this->em->flush($entity);
+        $this->em->clear();
+
+        $entity = $this->em->find(Entity::class, 1);
+        $this->assertEquals('top secret code', $entity->getSecretData());
+    }
 }

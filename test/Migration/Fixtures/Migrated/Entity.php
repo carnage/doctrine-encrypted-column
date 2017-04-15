@@ -53,6 +53,6 @@ class Entity
      */
     public function setSecretData($secret_data)
     {
-        $this->secret_data->setValue($secret_data);
+        $this->secret_data = new ValueHolder($secret_data);
     }
 }
