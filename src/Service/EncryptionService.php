@@ -78,7 +78,7 @@ class EncryptionService
                 if (
                     !$original->needsReencryption($this->encryptor->getIdentifier(), $this->serializer->getIdentifier())
                 ) {
-                     return $original;
+                        return $original;
                 }
             }
 
@@ -109,7 +109,7 @@ class EncryptionService
         $serializer = $this->serializers->get($value->getSerializerIdentifier()->toString());
         $encryptor = $this->encryptors->get($value->getEncryptorIdentifier()->toString());
 
-        return function (& $wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, & $initializer) use ($serializer, $encryptor, $value) {
+        return function(& $wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, & $initializer) use ($serializer, $encryptor, $value) {
             $initializer = null;
             $wrappedObject = $serializer->unserialize($encryptor->decrypt($value->getData()));
 

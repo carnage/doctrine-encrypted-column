@@ -48,7 +48,7 @@ class EncryptedColumn implements \JsonSerializable
     {
         // If an old version has saved data, these fields won't be available
         // Default to the only services available in V0.1
-        if(!isset($data['serializer'])) {
+        if (!isset($data['serializer'])) {
             return new self(
                 $data['classname'],
                 $data['data'],

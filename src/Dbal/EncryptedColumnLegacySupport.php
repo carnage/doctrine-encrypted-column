@@ -29,7 +29,7 @@ class EncryptedColumnLegacySupport extends Type
     public static function create(EncryptionService $encryptionService)
     {
         Type::addType(EncryptedColumnLegacySupport::ENCRYPTED, EncryptedColumnLegacySupport::class);
-        /** @var EncryptedColumn $instance */
+        /** @var EncryptedColumnLegacySupport $instance */
         $instance = Type::getType(EncryptedColumnLegacySupport::ENCRYPTED);
         $instance->encryptionService = $encryptionService;
     }
