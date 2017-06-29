@@ -1,6 +1,6 @@
 <?php
 
-namespace Carnage\EncryptedColumn\Tests\Fixtures;
+namespace Carnage\EncryptedColumn\Tests\Functional\Fixtures;
 
 use Doctrine\ORM\Mapping as ORM;
 

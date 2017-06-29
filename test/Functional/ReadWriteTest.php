@@ -9,12 +9,17 @@
 namespace Carnage\EncryptedColumn\Tests;
 
 use Carnage\EncryptedColumn\Configuration;
-use Carnage\EncryptedColumn\Tests\Fixtures\CreditCardDetails;
-use Carnage\EncryptedColumn\Tests\Fixtures\Entity;
+use Carnage\EncryptedColumn\Tests\Functional\Fixtures\CreditCardDetails;
+use Carnage\EncryptedColumn\Tests\Functional\Fixtures\Entity;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * Class ReadWriteTest
+ * @package Carnage\EncryptedColumn\Tests
+ * @runTestsInSeparateProcesses
+ */
 class ReadWriteTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -31,7 +36,7 @@ class ReadWriteTest extends \PHPUnit_Framework_TestCase
     {
         if (self::$_em === null) {
             $isDevMode = true;
-            $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__ . "../Fixtures"), $isDevMode, null, null, false);
+            $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__ . "/Fixtures"), $isDevMode, null, null, false);
 
             $conn = array(
                 'driver' => 'pdo_sqlite',
@@ -40,7 +45,7 @@ class ReadWriteTest extends \PHPUnit_Framework_TestCase
 
             self::$_em = EntityManager::create($conn, $config);
 
-            Configuration::register(self::$_em, __DIR__ . '/../Fixtures/enc.key');
+            Configuration::register(self::$_em, __DIR__ . '/Fixtures/enc.key');
 
             $schemaTool = new SchemaTool(self::$_em);
 

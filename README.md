@@ -1,3 +1,6 @@
+#Doctrine Encryted Column
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/carnage/doctrine-encrypted-column/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/carnage/doctrine-encrypted-column/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/carnage/doctrine-encrypted-column/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/carnage/doctrine-encrypted-column/?branch=master)
+
 # Motivation
 
 Currently there are about a dozen encrypted column extensions for doctrine. None of them are very well implemented and are
