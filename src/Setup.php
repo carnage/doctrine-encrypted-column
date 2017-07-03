@@ -43,7 +43,7 @@ final class Setup
 
         $key = new Key($legacyKey);
         $this->keyContainer->addKey($key);
-        $this->keyContainer->tagKey('legacy', $key->getIdentifier()->asString());
+        $this->keyContainer->tagKey('legacy', $key->getIdentifier()->toString());
 
         return $this;
     }
@@ -54,7 +54,7 @@ final class Setup
 
         $key = new Key($keypath);
         $this->keyContainer->addKey($key);
-        $this->keyContainer->tagKey('default', $key->getIdentifier()->asString());
+        $this->keyContainer->tagKey('default', $key->getIdentifier()->toString());
 
         return $this;
     }
@@ -67,7 +67,8 @@ final class Setup
             $encryptors->get(HaliteEncryptor::IDENTITY),
             $serializers->get(PhpSerializer::IDENTITY),
             $encryptors,
-            $serializers
+            $serializers,
+            $this->keyContainer
         );
     }
 

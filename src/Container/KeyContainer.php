@@ -14,7 +14,7 @@ final class KeyContainer implements ContainerInterface
 
     public function addKey(Key $key)
     {
-        $this->keys[$key->getIdentifier()->asString()] = $key;
+        $this->keys[$key->getIdentifier()->toString()] = $key;
     }
 
     public function tagKey($tag, $id)

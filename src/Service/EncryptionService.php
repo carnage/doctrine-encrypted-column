@@ -38,6 +38,11 @@ class EncryptionService
     private $serializers;
 
     /**
+     * @var ContainerInterface
+     */
+    private $keys;
+
+    /**
      * EncryptionService constructor.
      * @param EncryptorInterface $encryptor
      * @param SerializerInterface $serializer
@@ -48,12 +53,14 @@ class EncryptionService
         EncryptorInterface $encryptor,
         SerializerInterface $serializer,
         ContainerInterface $encryptors,
-        ContainerInterface $serializers
+        ContainerInterface $serializers,
+        ContainerInterface $keys
     ) {
         $this->encryptor = $encryptor;
         $this->serializer = $serializer;
         $this->encryptors = $encryptors;
         $this->serializers = $serializers;
+        $this->keys = $keys;
     }
 
     public function decryptField(EncryptedColumnVO $value)
@@ -90,13 +97,15 @@ class EncryptionService
             throw new \Exception('This column type only supports encrypting objects');
         }
 
-        $data = $this->encryptor->encrypt($this->serializer->serialize($value));
+        $key = $this->keys->get('default');
+        $data = $this->encryptor->encrypt($this->serializer->serialize($value), $key);
 
         return new EncryptedColumnVO(
             get_class($value),
             $data,
             $this->encryptor->getIdentifier(),
-            $this->serializer->getIdentifier()
+            $this->serializer->getIdentifier(),
+            $key->getIdentifier()
         );
     }
 
@@ -108,10 +117,11 @@ class EncryptionService
     {
         $serializer = $this->serializers->get($value->getSerializerIdentifier()->toString());
         $encryptor = $this->encryptors->get($value->getEncryptorIdentifier()->toString());
+        $key = $this->keys->get($value->getKeyIdentifier()->toString());
 
-        return function(& $wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, & $initializer) use ($serializer, $encryptor, $value) {
+        return function(& $wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, & $initializer) use ($serializer, $encryptor, $key, $value) {
             $initializer = null;
-            $wrappedObject = $serializer->unserialize($encryptor->decrypt($value->getData()));
+            $wrappedObject = $serializer->unserialize($encryptor->decrypt($value->getData(), $key));
 
             return true;
         };

@@ -26,22 +26,31 @@ class EncryptedColumn implements \JsonSerializable
      * @var SerializerIdentity
      */
     private $serializer;
+    /**
+     * @var KeyIdentity
+     */
+    private $key;
 
     /**
      * EncryptedColumn constructor.
-     * @param $classname
-     * @param $data
+     * @param string $classname
+     * @param string $data
+     * @param EncryptorIdentity $encryptor
+     * @param SerializerIdentity $serializer
+     * @param KeyIdentity $key
      */
     public function __construct(
         string $classname,
         string $data,
         EncryptorIdentity $encryptor,
-        SerializerIdentity $serializer
+        SerializerIdentity $serializer,
+        KeyIdentity $key
     ) {
         $this->classname = $classname;
         $this->data = $data;
         $this->encryptor = $encryptor;
         $this->serializer = $serializer;
+        $this->key = $key;
     }
 
     public static function fromArray(array $data)
@@ -53,7 +62,8 @@ class EncryptedColumn implements \JsonSerializable
                 $data['classname'],
                 $data['data'],
                 new EncryptorIdentity(HaliteEncryptor::IDENTITY),
-                new SerializerIdentity(PhpSerializer::IDENTITY)
+                new SerializerIdentity(PhpSerializer::IDENTITY),
+                new KeyIdentity('default')
             );
         }
 
@@ -61,7 +71,8 @@ class EncryptedColumn implements \JsonSerializable
             $data['classname'],
             $data['data'],
             new EncryptorIdentity($data['encryptor']),
-            new SerializerIdentity($data['serializer'])
+            new SerializerIdentity($data['serializer']),
+            new KeyIdentity($data['keyid'])
         );
     }
 
@@ -71,7 +82,8 @@ class EncryptedColumn implements \JsonSerializable
             'classname' => $this->classname,
             'data' => $this->data,
             'encryptor' => $this->encryptor->toString(),
-            'serializer' => $this->serializer->toString()
+            'serializer' => $this->serializer->toString(),
+            'keyid' => $this->key->toString(),
         ];
     }
 
@@ -105,6 +117,14 @@ class EncryptedColumn implements \JsonSerializable
     public function getSerializerIdentifier(): SerializerIdentity
     {
         return $this->serializer;
+    }
+
+    /**
+     * @return KeyIdentity
+     */
+    public function getKeyIdentifier(): KeyIdentity
+    {
+        return $this->key;
     }
 
     public function needsReencryption(EncryptorIdentity $encryptor, SerializerIdentity $serializer): bool

@@ -9,6 +9,7 @@
 namespace Carnage\EncryptedColumn\Tests;
 
 use Carnage\EncryptedColumn\Configuration;
+use Carnage\EncryptedColumn\Setup as ECSetup;
 use Carnage\EncryptedColumn\Tests\Functional\Fixtures\CreditCardDetails;
 use Carnage\EncryptedColumn\Tests\Functional\Fixtures\Entity;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -45,7 +46,9 @@ class ReadWriteTest extends \PHPUnit_Framework_TestCase
 
             self::$_em = EntityManager::create($conn, $config);
 
-            Configuration::register(self::$_em, __DIR__ . '/Fixtures/enc.key');
+            (new ECSetup())
+                ->withKeyPath( __DIR__ . '/Fixtures/enc.key')
+                ->register(self::$_em);
 
             $schemaTool = new SchemaTool(self::$_em);
 
