@@ -55,18 +55,6 @@ class EncryptedColumn implements \JsonSerializable
 
     public static function fromArray(array $data)
     {
-        // If an old version has saved data, these fields won't be available
-        // Default to the only services available in V0.1
-        if (!isset($data['serializer'])) {
-            return new self(
-                $data['classname'],
-                $data['data'],
-                new EncryptorIdentity(HaliteEncryptor::IDENTITY),
-                new SerializerIdentity(PhpSerializer::IDENTITY),
-                new KeyIdentity('default')
-            );
-        }
-
         return new self(
             $data['classname'],
             $data['data'],

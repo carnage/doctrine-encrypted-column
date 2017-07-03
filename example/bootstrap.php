@@ -18,4 +18,6 @@ $conn = array(
 // obtaining the entity manager
 $entityManager = EntityManager::create($conn, $config);
 
-\Carnage\EncryptedColumn\Configuration::register($entityManager, './enc.key');
+(new \Carnage\EncryptedColumn\Setup())
+    ->withKeyPath('./enc.key')
+    ->register($entityManager);
