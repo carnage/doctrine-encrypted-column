@@ -59,6 +59,19 @@ final class Setup
         return $this;
     }
 
+    public function withKey(string $key, array $tags = [])
+    {
+        $key = new Key($key);
+        $keyId = $key->getIdentifier()->toString();
+        $this->keyContainer->addKey($key);
+
+        foreach ($tags as $tag) {
+            $this->keyContainer->tagKey($tag, $keyId);
+        }
+
+        return $this;
+    }
+
     private function buildEncryptionService(): EncryptionService
     {
         $encryptors = self::buildEncryptorsContainer();
