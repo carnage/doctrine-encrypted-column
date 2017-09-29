@@ -9,6 +9,7 @@
 namespace Carnage\EncryptedColumn\Tests;
 
 use Carnage\EncryptedColumn\Configuration;
+use Carnage\EncryptedColumn\Setup as ECSetup;
 use Carnage\EncryptedColumn\Tests\Functional\Fixtures\CreditCardDetails;
 use Carnage\EncryptedColumn\Tests\Functional\Fixtures\Entity;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -28,9 +29,19 @@ class ReadWriteTest extends \PHPUnit_Framework_TestCase
     private static $_em;
 
     /**
+     * @var ECSetup
+     */
+    private static $_setup;
+
+    /**
      * @var EntityManager
      */
     private $em;
+
+    /**
+     * @var ECSetup
+     */
+    private $setup;
 
     public function setUp()
     {
@@ -45,7 +56,11 @@ class ReadWriteTest extends \PHPUnit_Framework_TestCase
 
             self::$_em = EntityManager::create($conn, $config);
 
-            Configuration::register(self::$_em, __DIR__ . '/Fixtures/enc.key');
+            self::$_setup = new ECSetup();
+
+            self::$_setup
+                ->withKeyPath( __DIR__ . '/Fixtures/enc.key')
+                ->register(self::$_em);
 
             $schemaTool = new SchemaTool(self::$_em);
 
@@ -57,6 +72,7 @@ class ReadWriteTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->em = self::$_em;
+        $this->setup = self::$_setup;
     }
 
     public function testInsert()
@@ -131,5 +147,24 @@ class ReadWriteTest extends \PHPUnit_Framework_TestCase
         $data = $this->em->getConnection()->fetchAll('SELECT * FROM Entity');
 
         $this->assertNotEquals($savedData, json_decode($data[0]['creditCardDetails']));
+    }
+
+    public function testReadAfterKeyChange()
+    {
+        $entity = new Entity();
+        $creditCardDetails = new CreditCardDetails('1234567812345678', '04/19');
+        $entity->setCreditCardDetails($creditCardDetails);
+
+        $this->em->persist($entity);
+        $this->em->flush();
+
+        $this->em->clear();
+
+        $this->setup->withKey(__DIR__ . '/Fixtures/enc-alt.key', ['default']);
+
+        $entity = $this->em->find(Entity::class, 1);
+
+        $this->assertEquals($creditCardDetails->getNumber(), $entity->getCreditCardDetails()->getNumber());
+        $this->assertEquals($creditCardDetails->getExpiry(), $entity->getCreditCardDetails()->getExpiry());
     }
 }

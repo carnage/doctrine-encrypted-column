@@ -28,40 +28,32 @@ class EncryptedColumn implements \JsonSerializable
     private $serializer;
 
     /**
-     * EncryptedColumn constructor.
-     * @param $classname
-     * @param $data
+     * @var KeyIdentity
      */
+    private $key;
+
     public function __construct(
         string $classname,
         string $data,
         EncryptorIdentity $encryptor,
-        SerializerIdentity $serializer
+        SerializerIdentity $serializer,
+        KeyIdentity $key
     ) {
         $this->classname = $classname;
         $this->data = $data;
         $this->encryptor = $encryptor;
         $this->serializer = $serializer;
+        $this->key = $key;
     }
 
     public static function fromArray(array $data)
     {
-        // If an old version has saved data, these fields won't be available
-        // Default to the only services available in V0.1
-        if (!isset($data['serializer'])) {
-            return new self(
-                $data['classname'],
-                $data['data'],
-                new EncryptorIdentity(HaliteEncryptor::IDENTITY),
-                new SerializerIdentity(PhpSerializer::IDENTITY)
-            );
-        }
-
         return new self(
             $data['classname'],
             $data['data'],
             new EncryptorIdentity($data['encryptor']),
-            new SerializerIdentity($data['serializer'])
+            new SerializerIdentity($data['serializer']),
+            new KeyIdentity($data['keyid'])
         );
     }
 
@@ -71,7 +63,8 @@ class EncryptedColumn implements \JsonSerializable
             'classname' => $this->classname,
             'data' => $this->data,
             'encryptor' => $this->encryptor->toString(),
-            'serializer' => $this->serializer->toString()
+            'serializer' => $this->serializer->toString(),
+            'keyid' => $this->key->toString(),
         ];
     }
 
@@ -105,6 +98,14 @@ class EncryptedColumn implements \JsonSerializable
     public function getSerializerIdentifier(): SerializerIdentity
     {
         return $this->serializer;
+    }
+
+    /**
+     * @return KeyIdentity
+     */
+    public function getKeyIdentifier(): KeyIdentity
+    {
+        return $this->key;
     }
 
     public function needsReencryption(EncryptorIdentity $encryptor, SerializerIdentity $serializer): bool

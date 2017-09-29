@@ -5,32 +5,24 @@ namespace Carnage\EncryptedColumn\Encryptor;
 use Carnage\EncryptedColumn\Exception\PopArtPenguinException;
 use Carnage\EncryptedColumn\ValueObject\EncryptorIdentity;
 use Carnage\EncryptedColumn\ValueObject\IdentityInterface;
+use Carnage\EncryptedColumn\ValueObject\Key;
 use phpseclib\Crypt\Base;
 use phpseclib\Crypt\Rijndael;
 
 class LegacyEncryptor implements EncryptorInterface
 {
     const IDENTITY = 'legacy';
-    /**
-     * @var string
-     */
-    private $secret;
 
-    public function __construct($secret)
-    {
-        $this->secret = $secret;
-    }
-
-    public function encrypt($data)
+    public function encrypt($data, Key $key)
     {
         throw new PopArtPenguinException();
     }
 
-    public function decrypt($data)
+    public function decrypt($data, Key $key)
     {
         $cipher = new Rijndael(Base::MODE_ECB);
         $cipher->setBlockLength(256);
-        $cipher->setKey($this->secret);
+        $cipher->setKey($key->getKeyInfo());
         $cipher->padding = false;
 
         return trim($cipher->decrypt(base64_decode($data)));

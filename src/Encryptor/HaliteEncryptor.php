@@ -4,32 +4,22 @@ namespace Carnage\EncryptedColumn\Encryptor;
 
 use Carnage\EncryptedColumn\ValueObject\EncryptorIdentity;
 use Carnage\EncryptedColumn\ValueObject\IdentityInterface;
-use ParagonIE\Halite\Halite;
+use Carnage\EncryptedColumn\ValueObject\Key;
 use ParagonIE\Halite\KeyFactory;
 use ParagonIE\Halite\Symmetric;
 
 class HaliteEncryptor implements EncryptorInterface
 {
     const IDENTITY = 'halite';
-    /**
-     * @var string
-     */
-    private $keypath;
-    private $key;
 
-    public function __construct($keypath)
+    public function encrypt($data, Key $key)
     {
-        $this->keypath = $keypath;
+        return Symmetric\Crypto::encrypt($data, $this->loadKey($key));
     }
 
-    public function encrypt($data)
+    public function decrypt($data, Key $key)
     {
-        return Symmetric\Crypto::encrypt($data, $this->loadKey());
-    }
-
-    public function decrypt($data)
-    {
-        return Symmetric\Crypto::decrypt($data, $this->loadKey());
+        return Symmetric\Crypto::decrypt($data, $this->loadKey($key));
     }
 
     public function getIdentifier(): IdentityInterface
@@ -41,13 +31,8 @@ class HaliteEncryptor implements EncryptorInterface
      * @return Symmetric\EncryptionKey
      * @throws \ParagonIE\Halite\Alerts\CannotPerformOperation
      */
-    private function loadKey()
+    private function loadKey(Key $key)
     {
-        if ($this->key === null) {
-            $this->key = KeyFactory::loadEncryptionKey($this->keypath);
-        }
-        
-        return $this->key;
+        return KeyFactory::loadEncryptionKey($key->getKeyInfo());
     }
-
 }

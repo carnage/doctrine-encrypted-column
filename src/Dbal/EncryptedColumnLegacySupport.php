@@ -64,7 +64,8 @@ class EncryptedColumnLegacySupport extends Type
                 'data' => $value,
                 'classname' => ValueHolder::class,
                 'serializer' => 'legacy',
-                'encryptor' => 'legacy'
+                'encryptor' => 'legacy',
+                'keyid' => 'legacy',
             ];
         }
 
