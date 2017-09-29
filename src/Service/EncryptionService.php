@@ -42,13 +42,6 @@ class EncryptionService
      */
     private $keys;
 
-    /**
-     * EncryptionService constructor.
-     * @param EncryptorInterface $encryptor
-     * @param SerializerInterface $serializer
-     * @param ContainerInterface $encryptors
-     * @param ContainerInterface $serializers
-     */
     public function __construct(
         EncryptorInterface $encryptor,
         SerializerInterface $serializer,

@@ -26,19 +26,12 @@ class EncryptedColumn implements \JsonSerializable
      * @var SerializerIdentity
      */
     private $serializer;
+
     /**
      * @var KeyIdentity
      */
     private $key;
 
-    /**
-     * EncryptedColumn constructor.
-     * @param string $classname
-     * @param string $data
-     * @param EncryptorIdentity $encryptor
-     * @param SerializerIdentity $serializer
-     * @param KeyIdentity $key
-     */
     public function __construct(
         string $classname,
         string $data,

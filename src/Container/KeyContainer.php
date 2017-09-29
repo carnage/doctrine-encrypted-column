@@ -8,9 +8,9 @@ use Psr\Container\ContainerInterface;
 final class KeyContainer implements ContainerInterface
 {
     /**
+     * @var array
      */
-    private $keys;
-
+    private $keys = [];
 
     public function addKey(Key $key)
     {
